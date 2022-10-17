@@ -25,7 +25,7 @@ class Calender		/*definition of class*/
 	/*Function to find particular day that falls on the date entered by user*/
 	string FindDay() 
 	{
-		int count=0;
+		/*int count=0;
 		for(int i=1; i<year; i++)
 		{
 			count+=365;
@@ -36,7 +36,13 @@ class Calender		/*definition of class*/
 		}
 		for(int i=0; i<month-1; i++)
 			count+=Days[i];
-		count+=date+2;
+		count+=date+2;*/
+		int count=0;
+		count+=year*365;
+		count+=((year/4)-(year/100)+(year/400));
+		for(int i=0; i<month-1; i++)
+			count+=Days[i];
+		count+=date+1;
 		if(count%7==1)
 			return "Saturday";
 		else if(count%7==2)
@@ -57,15 +63,11 @@ class Calender		/*definition of class*/
 	int CountDays()
 	{
 		int count=0;
-		for(int i=1; i<year; i++)
-		{
-			count+=365;
-			if (((i %4 == 0) && (i % 100!= 0)) || (i%400 == 0))
-				count++;
-		}
+		count+=year*365;
+		count+=((year/4)-(year/100)+(year/400));
 		for(int i=0; i<month-1; i++)
 			count+=Days[i];
-		count+=date;
+		count+=date-1;
 		return count;
 	}
 	
@@ -73,41 +75,50 @@ class Calender		/*definition of class*/
 	void Difference(Calender ob)
 	{
 		int dd=0, mm=0, yy=0;
-		for(int i=date; i<=Days[month-1]; i++)
-			dd++;
 		if(year!=ob.year)
 		{
-			for(int i=month+1; i<=12; i++)
-				mm=mm+1;
-			for(int i=year+1; i<ob.year; i++)
+			if(ob.month!=1)
 			{
-				mm+=12;
-				if (((i % 4 == 0) && (i % 100!= 0)) || (i %400 == 0))
-					dd++;
+				for(int i=year+1; i<ob.year; i++)
+					mm+=12;
+				for(int i=month; i<12; i++)
+					mm=mm+1;
+				for (int i=1; i<ob.month; i++)
+					mm++;
 			}
-			for (int i=1; i<ob.month; i++)
-				mm++;
-			for (int i=1; i<ob.date; i++)
+			else if(ob.month==1)
+			{
+				for(int i=year+1; i<ob.year; i++)
+					mm+=12;
+				for(int i=month; i<12-1; i++)
+					mm=mm+1;
+				for (int i=date; i<Days[11]; i++)
 				dd++;
+				goto jump;
+			}
 		}
 		else 
 		{
-			for (int i=month+1; i<ob.month; i++)
+			for (int i=month; i<ob.month-1; i++)
 				mm++;
-			for (int i=1; i<ob.date; i++)
-				dd++;
 		}
-		if(dd>30)
+		for (int i=date; i<Days[ob.month-2]; i++)
+				dd++;
+		jump:
+		for (int i=1; i<=ob.date; i++)
+			dd++;
+		if(dd>=Days[ob.month-2])
 		{
-			mm+=dd/30;
-			dd=dd-((dd/30)*30);
+			mm++;
+			dd=dd-Days[ob.month-2];
 		}
 		if(mm>=12)
 		{
 			yy+=mm/12;
 			mm=mm-(12*yy);
 		}
-		cout << "The difference between dates is " << yy << " year(s) " << mm << " month(s) " << dd << " day(s).";
+		cout << "in months: " << mm+(12*yy) << " month(s) " << dd << " day(s)." <<endl;
+		cout << "in years: " << yy << " year(s) " << mm << " month(s) " << dd << " day(s).";
 	}
 	
 	/*Function to find all the facts of date entered by the user*/
@@ -120,22 +131,24 @@ class Calender		/*definition of class*/
 		count+=date;
 		if(count==1)
 			cout << "*It is 1st " << FindDay() << " out of 53.\n";
-		else 
+		if(count%7==0)
+			cout << "*It is the " << (count/7) <<"th " << FindDay() << " out of 52.\n";
+		else
 			cout << "*It is the " << (count/7)+1 <<"th " << FindDay() << " out of 52.\n";
 		if (((year % 4 == 0) && (year % 100!= 0)) || (year%400 == 0))
 		{
-			cout << "*This is a leap year.\n";
-			cout << "*It is the " << count << "th day & " << 366-count << " days are left in the year.\n";
 			if(month==2)
 				cout << "*This month has " << Days[month-1]+1 << " days.\n";
 			else
 				cout << "*This month has " << Days[month-1] << " days.\n";
+			cout << "*" <<year <<" is a leap year.\n";
+			cout << "*It is the " << count << "th day & " << 366-count << " days are left in the year.\n";
 		}		
 		else
 		{
-			cout << "*This is not a leap year.\n";
-			cout << "*It is the " << count << "th day & " << 365-count << " days are left in the year.\n";
 			cout << "*This month has " << Days[month-1] << " days.\n";
+			cout << "*" <<year <<" is not a leap year.\n";
+			cout << "*It is the " << count << "th day & " << 365-count << " days are left in the year.\n";
 		}
 	}
 	
@@ -338,7 +351,9 @@ int main()
 		cin >> date2;
 		if(date1>date2)
 			date1*date2;
-		cout << "\nThe difference between dates in days is " << date2.CountDays()-date1.CountDays() << " days." <<endl;
+		cout << "\nThe difference between " << date1.FindDay() << " " << date1 << " & " << date2.FindDay() << " " << date2 <<" is: " <<endl;
+		cout << "in hours: " << (date2.CountDays()-date1.CountDays())*24 << " hours." <<endl;
+		cout << "in days: " << date2.CountDays()-date1.CountDays() << " days." <<endl;
 		date1.Difference(date2);
 	}
 	else if(n==3)
@@ -349,7 +364,7 @@ int main()
 	}
 	else if(n==4)
 	{
-		cout << "\nThe date must be of the form dd/mm/yyyy.";
+		cout << "\nThe date must be of the form dd/mm/yyyy.\n";
 		Calender date2;
 		cin >> date1;
 		cin >> date2;
