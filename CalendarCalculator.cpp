@@ -1,6 +1,7 @@
-#include<iostream>
-#include<string>	/*for taking the date input as string*/
+#include<iostream>	
+#include<string>	
 #include<sstream>	/*for storing the data from string to int*/
+#include<stdlib.h>	/*for clearing the screen and changing the color of the output*/
 int Days[12]={31,28,31,30,31,30,31,31,30,31,30,31};
 using namespace std;
 
@@ -118,7 +119,7 @@ class Calender		/*definition of class*/
 			mm=mm-(12*yy);
 		}
 		cout << "in months: " << mm+(12*yy) << " month(s) " << dd << " day(s)." <<endl;
-		cout << "in years: " << yy << " year(s) " << mm << " month(s) " << dd << " day(s).";
+		cout << "in years: " << yy << " year(s) " << mm << " month(s) " << dd << " day(s)." <<endl;
 	}
 	
 	/*Function to find all the facts of date entered by the user*/
@@ -328,11 +329,12 @@ ostream & operator << (ostream & dout, Calender ob)
 
 int main()
 {
+	loop:
+	system("cls");
+	system("color a");
 	cout << "\n*************************Calender Calculator****************************\n";
 	int n;
-	string history;
 	cout << "\nPress 1 to find day at any date \nPress 2 to find difference between two dates\nPress 3 to find facts of any date\nPress 4 to print dates of particular day in any interval\nPress 5 to see history\nPress 6 to end the program\n";
-	loop:
 	cout << "\nChoose your option: ";
 	cin >> n;
 	Calender date1;
@@ -341,7 +343,9 @@ int main()
 		cout << "\nThe date must be of the form dd/mm/yyyy\n";
 		cin>>date1;
 		cout;
-		cout <<"The day on " << date1 << " is " << date1.FindDay()<<endl;
+		cout <<"The day on " << date1 << " is " << date1.FindDay()<<endl<<endl;
+		system("pause");
+		system("cls");
 	}
 	else if(n==2)
 	{
@@ -355,12 +359,18 @@ int main()
 		cout << "in hours: " << (date2.CountDays()-date1.CountDays())*24 << " hours." <<endl;
 		cout << "in days: " << date2.CountDays()-date1.CountDays() << " days." <<endl;
 		date1.Difference(date2);
+		cout<<endl;
+		system("pause");
+		system("cls");
 	}
 	else if(n==3)
 	{
 		cout << "\nThe date must be of the form dd/mm/yyyy\n";
 		cin >> date1;
 		date1.facts();
+		cout<<endl;
+		system("pause");
+		system("cls");
 	}
 	else if(n==4)
 	{
@@ -372,10 +382,16 @@ int main()
 			date1*date2;
 		date1.GetDay();
 		PrintDate(date1, date2);
+		cout<<endl;
+		system("pause");
+		system("cls");
 	}
 	else if(n==5)
 	{
 		date1.ShowHistory();
+		cout<<"\n"<<endl;
+		system("pause");
+		system("cls");
 	}
 	else if(n==6)
 		goto end;
